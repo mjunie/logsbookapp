@@ -20,9 +20,9 @@ const resource = new Resource({
   'environment': process.env.NODE_ENV || 'development',
 });
 
-// Configure OTLP Trace Exporter for Jaeger
+// Configure OTLP Trace Exporter for external Jaeger server
 const traceExporter = new OTLPTraceExporter({
-  url: process.env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT || 'http://localhost:4318/v1/traces',
+  url: process.env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT || 'http://144.91.65.196:4318/v1/traces',
   headers: {},
 });
 
@@ -60,8 +60,7 @@ const sdk = new NodeSDK({
 sdk.start();
 
 console.log('🚀 OpenTelemetry instrumentation initialized');
-console.log('📊 Exporting traces to:', process.env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT || 'http://localhost:4318/v1/traces');
-console.log('📈 Exporting metrics to:', process.env.OTEL_EXPORTER_OTLP_METRICS_ENDPOINT || 'http://localhost:4318/v1/metrics');
+console.log('📊 Exporting traces to:', process.env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT || 'http://144.91.65.196:4318/v1/traces');
 
 // Gracefully shut down the SDK on process exit
 process.on('SIGTERM', () => {
@@ -71,31 +70,3 @@ process.on('SIGTERM', () => {
     .catch((error) => console.error('Error shutting down OpenTelemetry SDK', error))
     .finally(() => process.exit(0));
 });
-
-
-
-
-///
-
-
-// // This file must be imported BEFORE any other modules
-// import { NodeSDK } from '@opentelemetry/sdk-node';
-// import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node';
-// import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
-// import { PeriodicExportingMetricReader, ConsoleMetricExporter } from '@opentelemetry/sdk-metrics';
-// import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
-
-// // Enable diagnostic logging for troubleshooting
-// diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
-
-// const sdk = new NodeSDK({
-//   traceExporter: new ConsoleSpanExporter(),
-//   metricReader: new PeriodicExportingMetricReader({
-//     exporter: new ConsoleMetricExporter(),
-//   }),
-//   instrumentations: [getNodeAutoInstrumentations()],
-// });
-
-// sdk.start();
-
-// console.log('OpenTelemetry instrumentation initialized');
